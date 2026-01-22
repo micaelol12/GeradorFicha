@@ -13,12 +13,18 @@ database = os.getenv("DATABASE")
 username = os.getenv("USERNAME")
 password = os.getenv("PASSWORD")
 
+# Geralmente as tabelas são: FichaFinanceira,FichaFinanceiraHeaderCalculo,Liquido e BaseEncargos
+# maximo 150 linhas para cifrar
+# maximo 1000 linhas no sql
+
 matriculas = [(14630,1),(14671,1),(15942,1),(16057,1),(14200,1),(16594,1),(17104,1),(17112,1),(17196,1)]
-tabela_destino = "FichaFinanceiraCalculo"
+tabela_destino = "FichaFinanceiraHeaderCalculo"
 competencia_inicial = '2005-01-01'
 competencia_final = '2026-01-01'
-max_linhas_por_arquivo = None # maximo 150
+max_linhas_por_arquivo = 1000 
 output_dir = "sql_inserts"
+identity_insert = True
+
 
 conn = pyodbc.connect(
     f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
@@ -42,8 +48,8 @@ for matricula,contrato in matriculas:
         
         colunas = result.columns.tolist()
         colunas_str = ", ".join(colunas)
-
         valores_linhas = []
+
         for _, row in result.iterrows():
             valores = []
             for c in colunas:
@@ -69,14 +75,21 @@ for matricula,contrato in matriculas:
             total_blocos = 1 
                    
         for i in range(total_blocos):
+            insert_sql = ""
             
             if max_linhas_por_arquivo:
                 bloco = valores_linhas[i*max_linhas_por_arquivo:(i+1)*max_linhas_por_arquivo]
             else:
                 bloco = valores_linhas
-                
-            insert_sql = f"INSERT INTO {tabela_destino} ({colunas_str}) VALUES\n" + ",\n".join(bloco) + ";"
             
+            if identity_insert:
+                insert_sql += f"SET IDENTITY_INSERT {tabela_destino} ON;\n"
+                
+            insert_sql += f"INSERT INTO {tabela_destino} ({colunas_str}) VALUES\n" + ",\n".join(bloco) + ";"
+            
+            if identity_insert:
+                insert_sql += f"\nSET IDENTITY_INSERT {tabela_destino} OFF;"
+                
             if total_blocos > 1:
                 file_name = f"insert_{tabela_destino}_part{i+1}.sql"
             else:
