@@ -1,0 +1,16 @@
+{
+    "server": "GOVBR9641\\MSSQL2022DEV",
+    "database": "GP0001_FSPSS",
+    "username": "PRONIM",
+    "password": "PRO2010nim",
+    "output_dir": "sql_inserts",
+    "tabela": "BaseEncargos",
+    "max_linhas": 150,
+    "identity": false,
+    "matriculas": [
+        [
+            658065,
+            1
+        ]
+    ]
+}
