@@ -4,7 +4,7 @@
     "username": "PRONIM",
     "password": "PRO2010nim",
     "output_dir": "sql_inserts",
-    "tabela": "BaseEncargos",
+    "tabela": "FICHAFINANCEIRA",
     "max_linhas": 150,
     "identity": false,
     "matriculas": [

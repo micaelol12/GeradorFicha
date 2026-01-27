@@ -87,6 +87,8 @@ def gerar_inserts(
                 with open(path, "w", encoding="utf-8") as f:
                     f.write(insert_sql)
                     
+                progress_callback((i / total_blocos) * 100)
+                    
             progress_callback((idx / total) * 100)
             
         except Exception as e:

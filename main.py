@@ -79,8 +79,16 @@ class App(tk.Tk):
         self._campo(frame, "Tabela destino", self.tabela, 0)
         self._campo(frame, "Competência inicial", self.comp_ini, 1)
         self._campo(frame, "Competência final", self.comp_fim, 2)
-        self._campo(frame, "Máx linhas por arquivo", self.max_linhas, 3)
-
+        
+        ttk.Label(frame, text="Máximo de linhas p/ arquivo").grid(row=3, column=0, sticky="w", padx=5,pady=5)
+        ttk.Spinbox(
+            frame,
+            from_=1,
+            to=1000,
+            textvariable=self.max_linhas,
+            width=38
+        ).grid(row=3, column=1, padx=2)
+        
         ttk.Checkbutton(frame, text="Usar IDENTITY_INSERT", variable=self.identity)\
             .grid(row=4, column=1, sticky="w", padx=5)
 
@@ -107,9 +115,9 @@ class App(tk.Tk):
         self.log.pack(fill="both", expand=True)
 
     def _campo(self, frame, label, var, row):
-        ttk.Label(frame, text=label).grid(row=row, column=0, sticky="w", padx=5)
+        ttk.Label(frame, text=label).grid(row=row, column=0, sticky="w", padx=5,pady=5)
         ttk.Entry(frame, textvariable=var, width=40)\
-            .grid(row=row, column=1, padx=5)
+            .grid(row=row, column=1, padx=2)
 
     def _log(self, msg):
         self.log.configure(state="normal")
